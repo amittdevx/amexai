@@ -1,7 +1,0 @@
-services:
-  - type: background
-    name: amex-agent
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python agent.py start
-   

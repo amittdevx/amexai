@@ -2,10 +2,8 @@ from dotenv import load_dotenv
 
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions
-from livekit.plugins import (
-    noise_cancellation,
-)
-from livekit.plugins import google  
+from livekit.plugins import noise_cancellation
+from livekit.plugins import google
 
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 from tools import search_web, get_weather, send_email, open_app
@@ -14,24 +12,28 @@ load_dotenv()
 
 
 class Assistant(Agent):
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__(
             instructions=AGENT_INSTRUCTION,
-             llm=google.beta.realtime.RealtimeModel(
-                 voice="Charon",
-                 temperature=0.8,
-                 ),
-             tools=[search_web, get_weather,send_email,open_app ],
+            llm=google.beta.realtime.RealtimeModel(
+                model="gemini-2.5-flash-native-audio-preview-12-2025",
+                voice="Puck",
+                temperature=0.8,
+            ),
+            tools=[
+                search_web,
+                get_weather,
+                send_email,
+                open_app,
+            ],
         )
 
 
 async def entrypoint(ctx: agents.JobContext):
-  
-    session = AgentSession(
-  
-    )
+    # IMPORTANT: Connect first
+    await ctx.connect()
 
-
+    session = AgentSession()
 
     await session.start(
         room=ctx.room,
@@ -42,10 +44,8 @@ async def entrypoint(ctx: agents.JobContext):
         ),
     )
 
-    await ctx.connect()
-
     await session.generate_reply(
-        instructions=SESSION_INSTRUCTION,   
+        instructions=SESSION_INSTRUCTION,
     )
 
 

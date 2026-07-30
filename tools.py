@@ -34,7 +34,7 @@ async def get_weather(context: RunContext, city: str) -> str:
 
 @function_tool()
 async def search_web(context: RunContext, query: str) -> str:
-    """Search the web for a given query and give the direct results not repeat the query and say tool_output direct give the answer but somtime you can repeat a part of the question """
+    """Search the web for a given query and give the direct results not repeat the query and do not say tool_output, direct give the answer but somtime you can repeat a part of the question"""
     try:
         result = DuckDuckGoSearchRun().run(tool_input=query)
         logging.info(f"Search result for {query}: {result}")
